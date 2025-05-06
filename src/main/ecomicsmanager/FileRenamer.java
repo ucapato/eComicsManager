@@ -1,3 +1,5 @@
+package ecomicsmanager;
+
 public class FileRenamer {
     private String rootFolder;
 

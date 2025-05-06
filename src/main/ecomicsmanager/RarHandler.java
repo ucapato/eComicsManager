@@ -1,3 +1,5 @@
+package ecomicsmanager;
+
 public class RarHandler {
     private String rootFolder;
 
