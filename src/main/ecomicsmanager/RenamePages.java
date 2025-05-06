@@ -1,3 +1,5 @@
+package ecomicsmanager;
+
 public class RenamePages {
     private String rootFolder;
 

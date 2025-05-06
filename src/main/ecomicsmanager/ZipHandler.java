@@ -1,3 +1,5 @@
+package ecomicsmanager;
+
 public class ZipHandler {
     private String rootFolder;
 
