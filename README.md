@@ -13,6 +13,7 @@ eComicsManager is a command-line tool to help manage local comic book files. It 
 - Unrar files (RAR creation is not supported)
 - Convert `.zip` ↔ `.cbz`
 - Convert `.rar` ↔ `.cbr`
+- Convert `.cbr` to `.cbz` (batch, all steps automated)
 
 ## Project Status
 🚧 Work in progress — features are being implemented incrementally as Java concepts are learned.
