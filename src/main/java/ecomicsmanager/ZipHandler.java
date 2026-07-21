@@ -54,7 +54,14 @@ public class ZipHandler {
         // FileOutputStream writes raw bytes to a file on disk.
         // ZipOutputStream wraps it to write in ZIP format.
         try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile))) {
-            for (File file : folder.listFiles()) {
+            File[] files = folder.listFiles();
+            // listFiles() can return null if the folder is not readable (e.g. permission denied).
+            // Always null-check before iterating to avoid NullPointerException.
+            if (files == null) {
+                System.out.println("  ERROR: Could not read folder: " + folder.getName());
+                return;
+            }
+            for (File file : files) {
                 if (file.isDirectory()) {
                     System.out.println("  WARNING: Skipping nested subfolder: " + file.getName());
                     continue;

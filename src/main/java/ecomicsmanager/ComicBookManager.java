@@ -35,9 +35,9 @@ public class ComicBookManager {
     }
 
     private void showMenu() {
+        // try-with-resources: automatically closes Scanner when the block ends, even if an exception occurs.
         // Scanner reads user input from System.in (the keyboard).
-        // NOTE: should be used with try-with-resources to ensure it is always closed, even if an exception occurs.
-        Scanner scanner = new Scanner(System.in);
+        try (Scanner scanner = new Scanner(System.in)) {
 
         // Infinite loop: keeps showing the menu until the user chooses to exit (case 0).
         while (true) {
@@ -54,10 +54,18 @@ public class ComicBookManager {
             System.out.println("0. Exit");
             System.out.print("Choose an option: "); // print (no 'ln') keeps the cursor on the same line.
 
-            // NOTE: nextInt() will throw InputMismatchException if the user types a non-integer.
-            // A safer approach is to use nextLine() + Integer.parseInt() wrapped in a try/catch.
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consumes the leftover newline character after the number.
+            // nextLine() reads the whole input as a String — never throws on unexpected input.
+            String input = scanner.nextLine();
+            int choice;
+            try {
+                // Integer.parseInt() converts the String to an integer.
+                // Throws NumberFormatException if the String is not a valid number.
+                choice = Integer.parseInt(input.trim()); // trim() removes any accidental leading/trailing spaces.
+            } catch (NumberFormatException e) {
+                // Instead of crashing, we print a friendly message and loop back to show the menu again.
+                System.out.println("Invalid input! Please enter a number.");
+                continue; // 'continue' skips the rest of this iteration and goes back to the top of the while loop.
+            }
 
             // Switch expression (Java 14+): cleaner alternative to if/else chains.
             // Each 'case' matches a value of 'choice' and runs the corresponding action.
@@ -75,11 +83,12 @@ public class ComicBookManager {
                 case 0 -> {
                     // Block arrow case: use curly braces when you need multiple statements.
                     System.out.println("Exiting... Goodbye!");
-                    scanner.close(); // Releases the Scanner resource.
                     return; // Exits the method (and the loop), ending the program gracefully.
+                    // Scanner is closed automatically by try-with-resources — no need to call scanner.close() manually.
                 }
                 default -> System.out.println("Invalid option! Please try again."); // Catches any unrecognized input.
             }
         }
+        } // end try-with-resources — Scanner is closed here automatically.
     }
 }
