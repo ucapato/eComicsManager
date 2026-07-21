@@ -48,10 +48,9 @@ public class ComicBookManager {
             System.out.println("3. Unzip a file to a folder");
             System.out.println("4. Rename .zip to .cbz");
             System.out.println("5. Rename .cbz to .zip");
-            System.out.println("6. RAR a folder");
-            System.out.println("7. Unrar a file to a folder");
-            System.out.println("8. Rename .rar to .cbr");
-            System.out.println("9. Rename .cbr to .rar");
+            System.out.println("6. Unrar a file to a folder");
+            System.out.println("7. Rename .rar to .cbr");
+            System.out.println("8. Rename .cbr to .rar");
             System.out.println("0. Exit");
             System.out.print("Choose an option: "); // print (no 'ln') keeps the cursor on the same line.
 
@@ -70,10 +69,9 @@ public class ComicBookManager {
                 case 3 -> new ZipHandler(ROOT_FOLDER).unzipFile();
                 case 4 -> new FileRenamer(ROOT_FOLDER).renameZipToCbz();
                 case 5 -> new FileRenamer(ROOT_FOLDER).renameCbzToZip();
-                case 6 -> new RarHandler(ROOT_FOLDER).rarFolder();
-                case 7 -> new RarHandler(ROOT_FOLDER).unrarFile();
-                case 8 -> new FileRenamer(ROOT_FOLDER).renameRarToCbr();
-                case 9 -> new FileRenamer(ROOT_FOLDER).renameCbrToRar();
+                case 6 -> new RarHandler(ROOT_FOLDER).unrarFile();
+                case 7 -> new FileRenamer(ROOT_FOLDER).renameRarToCbr();
+                case 8 -> new FileRenamer(ROOT_FOLDER).renameCbrToRar();
                 case 0 -> {
                     // Block arrow case: use curly braces when you need multiple statements.
                     System.out.println("Exiting... Goodbye!");
