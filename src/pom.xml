@@ -10,7 +10,15 @@
         <maven.compiler.source>17</maven.compiler.source> <maven.compiler.target>17</maven.compiler.target> </properties>
 
     <dependencies>
-        </dependencies>
+        <!-- External dependency: junrar is an open-source Java library for extracting .rar files. -->
+        <!-- Maven will automatically download this library when you run 'mvn compile'. -->
+        <!-- groupId + artifactId + version uniquely identify a library in the Maven repository. -->
+        <dependency>
+            <groupId>com.github.junrar</groupId>
+            <artifactId>junrar</artifactId>
+            <version>7.5.5</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
