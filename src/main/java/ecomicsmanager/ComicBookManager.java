@@ -10,7 +10,8 @@ public class ComicBookManager {
     // Constant: a fixed value that never changes (final = cannot be reassigned, static = belongs to the class, not an instance).
     // NOTE: hardcoded path — works for now but makes the app non-portable (won't work on other machines).
     // A better approach is to pass the path as a CLI argument or read it from a config file.
-    private static final String ROOT_FOLDER = "C:\\gibis\\";
+    // private static final String ROOT_FOLDER = "C:\\gibis\\";
+    private static final String ROOT_FOLDER = "/mnt/c/gibis";
 
     // Static factory-style method: called by Main to bootstrap the application.
     // 'static' means it can be called without creating an instance first — Main.main() calls this directly.
@@ -52,6 +53,7 @@ public class ComicBookManager {
                 System.out.println("6. Unrar a file to a folder");
                 System.out.println("7. Rename .rar to .cbr");
                 System.out.println("8. Rename .cbr to .rar");
+                System.out.println("9. Convert .cbr to .cbz");
                 System.out.println("0. Exit");
                 System.out.print("Choose an option: "); // print (no 'ln') keeps the cursor on the same line.
 
@@ -81,6 +83,7 @@ public class ComicBookManager {
                     case 6 -> new RarHandler(ROOT_FOLDER).unrarFile();
                     case 7 -> new FileRenamer(ROOT_FOLDER).renameRarToCbr();
                     case 8 -> new FileRenamer(ROOT_FOLDER).renameCbrToRar();
+                    case 9 -> convertCbrToCbz();
                     case 0 -> {
                         // Block arrow case: use curly braces when you need multiple statements.
                         System.out.println("Exiting... Goodbye!");
@@ -92,5 +95,26 @@ public class ComicBookManager {
             }
 
         } // end try-with-resources — Scanner is closed here automatically.
+    }
+
+    // Converts all .cbr files in rootFolder to .cbz by chaining 4 steps in sequence:
+    // 1. Rename .cbr → .rar (so the unrar tool can find them)
+    // 2. Unrar each .rar into a subfolder
+    // 3. Zip each subfolder into a .zip file
+    // 4. Rename .zip → .cbz
+    private void convertCbrToCbz() {
+        System.out.println("\n--- Step 1/4: Renaming .cbr to .rar ---");
+        new FileRenamer(ROOT_FOLDER).renameCbrToRar();
+
+        System.out.println("\n--- Step 2/4: Unraring .rar files ---");
+        new RarHandler(ROOT_FOLDER).unrarFile();
+
+        System.out.println("\n--- Step 3/4: Zipping folders to .zip ---");
+        new ZipHandler(ROOT_FOLDER).zipFolder();
+
+        System.out.println("\n--- Step 4/4: Renaming .zip to .cbz ---");
+        new FileRenamer(ROOT_FOLDER).renameZipToCbz();
+
+        System.out.println("\nConversion complete!");
     }
 }
