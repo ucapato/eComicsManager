@@ -1,19 +1,18 @@
 package ecomicsmanager;
 
-// NOTE: this file was previously saved in UTF-16 encoding (causing null bytes between characters).
-// It has been re-saved as UTF-8, which is the standard encoding for Java source files.
-
-// Class: every Java program lives inside a class. The class name must match the filename (Main.java).
-// NOTE: both this class and ComicBookManager have a main() method — the intended entry point is ambiguous.
-// As you grow the project, consider keeping only one main() as the single entry point.
+// Class: the single entry point of the application.
+// In Java, the class containing main() is the "launcher" — it should do as little as possible,
+// just start the app and delegate everything else to the appropriate class.
+// Having one dedicated entry point makes it immediately clear where the program starts.
 public class Main {
 
     // Entry point: Java always looks for this exact signature to start the program.
     // 'public' = accessible from anywhere, 'static' = belongs to the class (no object needed),
     // 'void' = returns nothing, 'String[] args' = command-line arguments passed at runtime.
     public static void main(String[] args) {
-        // System.out.println() prints a line of text to the console, then moves to the next line.
-        // System.out is the standard output stream; println = "print line".
-        System.out.println("Hello eComicsManager!");
+        // Delegation pattern: Main doesn't do any work itself — it hands off to ComicBookManager.
+        // This keeps responsibilities separate: Main = start the app, ComicBookManager = run the app.
+        // args is passed through so ComicBookManager can use command-line arguments if needed in the future.
+        ComicBookManager.start(args);
     }
 }

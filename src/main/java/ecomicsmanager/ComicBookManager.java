@@ -12,9 +12,10 @@ public class ComicBookManager {
     // A better approach is to pass the path as a CLI argument or read it from a config file.
     private static final String ROOT_FOLDER = "C:\\gibis\\";
 
-    // Entry point: Java always starts execution from a method named main(String[] args).
-    // args[] is an array of strings passed from the command line when running the program.
-    public static void main(String[] args) {
+    // Static factory-style method: called by Main to bootstrap the application.
+    // 'static' means it can be called without creating an instance first — Main.main() calls this directly.
+    // Renamed from main() to start() to make clear this is not the entry point — Main.java is.
+    public static void start(String[] args) {
         // Creating an object (instance) of this class using the constructor.
         // 'new' allocates memory and calls the constructor to initialize the object.
         ComicBookManager manager = new ComicBookManager();

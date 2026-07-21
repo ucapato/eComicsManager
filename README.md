@@ -22,7 +22,7 @@ eComicsManager is a command-line tool to help manage local comic book files. It 
 ## How to Run
 ```bash
 mvn compile
-mvn exec:java -Dexec.mainClass="ecomicsmanager.ComicBookManager"
+mvn exec:java -Dexec.mainClass="ecomicsmanager.Main"
 ```
 
 ## Java Concepts Practiced
