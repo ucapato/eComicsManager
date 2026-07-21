@@ -127,6 +127,8 @@ public class ZipHandler {
     }
 
     // Private helper: extracts all entries from a single .zip file into the target folder.
+    // Strips the top-level folder prefix if present (e.g. "mycomic/extras/P0001.jpg" → "extras/P0001.jpg"),
+    // but preserves any nested subfolder structure underneath it.
     private void unzipSingleFile(File zipFile, File targetFolder) {
         // ZipInputStream reads a ZIP archive entry by entry.
         // FileInputStream provides the raw bytes of the .zip file to ZipInputStream.
@@ -135,8 +137,36 @@ public class ZipHandler {
 
             // getNextEntry() moves to the next file inside the ZIP. Returns null when there are no more entries.
             while ((entry = zis.getNextEntry()) != null) {
-                File outFile = new File(targetFolder, entry.getName());
-                // new File(parent, child) safely builds the output path inside the target folder.
+
+                // Skip directory entries — we only extract files.
+                // Some ZIPs include explicit folder entries (e.g. "mycomic/") that would crash FileOutputStream.
+                if (entry.isDirectory()) {
+                    zis.closeEntry();
+                    continue;
+                }
+
+                // entry.getName() may include a top-level folder prefix (e.g. "mycomic/extras/P0001.jpg").
+                // indexOf('/') finds the first '/' — if present, substring() strips everything up to and including it,
+                // leaving "extras/P0001.jpg". If there is no '/', the name is used as-is.
+                String entryName = entry.getName();
+                int firstSlash = entryName.indexOf('/');
+                String relativePath = (firstSlash != -1) ? entryName.substring(firstSlash + 1) : entryName;
+
+                // Skip empty paths — this happens when the entry IS the top-level folder itself (e.g. "mycomic/").
+                if (relativePath.isEmpty()) {
+                    zis.closeEntry();
+                    continue;
+                }
+
+                File outFile = new File(targetFolder, relativePath);
+
+                // getParentFile() returns the folder that should contain this file.
+                // mkdirs() creates it and any missing intermediate folders (e.g. "extras/").
+                // This preserves nested subfolder structure from inside the ZIP.
+                File parentDir = outFile.getParentFile();
+                if (!parentDir.exists()) {
+                    parentDir.mkdirs();
+                }
 
                 try (FileOutputStream fos = new FileOutputStream(outFile)) {
                     byte[] buffer = new byte[1024];
@@ -147,7 +177,7 @@ public class ZipHandler {
                 }
 
                 zis.closeEntry(); // Signals that we are done reading this entry from the ZIP.
-                System.out.println("  Extracted: " + entry.getName());
+                System.out.println("  Extracted: " + relativePath);
             }
         } catch (IOException e) {
             System.out.println("  ERROR: Failed to unzip " + zipFile.getName() + ": " + e.getMessage());
